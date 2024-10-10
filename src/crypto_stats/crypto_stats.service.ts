@@ -9,6 +9,17 @@ export class CryptoStatsService {
     private readonly httpService: HttpService,
     private readonly prisma: PrismaService,
   ) {}
+
+  async getCurrentStatsById(crypto_id: string) {
+    const response = await this.httpService
+      .get<Cryptocurrency[]>(`${process.env.BASE_URL}&ids=${crypto_id}`)
+      .toPromise();
+    return {
+      price: response.data[0].current_price,
+      marketCap: response.data[0].market_cap,
+      '24hChange': response.data[0].price_change_24h,
+    };
+  }
   /// cron job for getting data in every 2 hours
   @Cron('0 */2 * * *')
   async handleCron() {

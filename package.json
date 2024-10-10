@@ -29,6 +29,7 @@
     "@nestjs/swagger": "^7.4.2",
     "@prisma/client": "^5.20.0",
     "axios": "^1.7.7",
+    "class-validator": "^0.14.1",
     "mongoose": "^8.7.1",
     "nestjs-prisma": "^0.23.0",
     "prisma": "^5.20.0",
