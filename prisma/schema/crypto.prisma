@@ -1,0 +1,12 @@
+model Crypto {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+  crypto_name      String
+  price_change_24h Float
+  crypto_id        String
+  market_cap       Float
+  current_price    Float
+
+  @@index([crypto_id, updated_at])
+}

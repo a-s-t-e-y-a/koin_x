@@ -5,7 +5,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  //swagger for api-docs
+  //swagger implementation
 
   const config = new DocumentBuilder()
     .setTitle('Crypto API')
