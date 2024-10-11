@@ -55,7 +55,10 @@ export class CryptoStatsController {
   }
 
   @Post('run')
-  @ApiOperation({ summary: 'Run the cron job manually' })
+  @ApiOperation({
+    summary:
+      'Run the cron job manually for testing purpose { otherwise it is runing once every 2 hours.}',
+  })
   @ApiResponse({ status: 200, description: 'Cron job executed successfully.' })
   async runCronJob() {
     const data = await this.cryptoStatsService.runCronJob();
