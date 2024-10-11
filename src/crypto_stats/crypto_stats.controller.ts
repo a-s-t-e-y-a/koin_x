@@ -1,4 +1,4 @@
-import { Controller, Get, Query, ParseEnumPipe } from '@nestjs/common';
+import { Controller, Get, Query, ParseEnumPipe, Post } from '@nestjs/common';
 import { CryptoStatsService } from './crypto_stats.service';
 import { ApiOperation, ApiTags, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { CryptoCurrency } from './dto/get_crypto.dto';
@@ -51,6 +51,17 @@ export class CryptoStatsController {
     return {
       success: true,
       data: { deviation: result },
+    };
+  }
+
+  @Post('run')
+  @ApiOperation({ summary: 'Run the cron job manually' })
+  @ApiResponse({ status: 200, description: 'Cron job executed successfully.' })
+  async runCronJob() {
+    const data = await this.cryptoStatsService.runCronJob();
+    return {
+      success: true,
+      data,
     };
   }
 }

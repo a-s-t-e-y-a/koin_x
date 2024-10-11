@@ -1,4 +1,10 @@
-import { IsEnum } from 'class-validator';
+import {
+  IsDate,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export enum CryptoCurrency {

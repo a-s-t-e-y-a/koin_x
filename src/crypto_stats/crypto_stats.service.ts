@@ -82,4 +82,37 @@ export class CryptoStatsService {
 
     await Promise.all(promises);
   }
+
+  //// only if you want to run cron job manually once for testing { and for
+  //swagger also}
+  async runCronJob() {
+    const cryptoCurrencies = ['bitcoin', 'ethereum', 'matic-network'];
+    const createEntries = [];
+    const promises = cryptoCurrencies.map(async (coin) => {
+      try {
+        const response = await this.httpService
+          .get<Cryptocurrency[]>(`${process.env.BASE_URL}&ids=${coin}`)
+          .toPromise();
+
+        const { name, current_price, price_change_24h, market_cap, id } =
+          response.data[0];
+
+        const entries = await this.prisma.crypto.create({
+          data: {
+            crypto_name: name,
+            current_price: parseFloat(current_price.toString()),
+            price_change_24h: parseFloat(price_change_24h.toString()),
+            market_cap: parseFloat(market_cap.toString()),
+            crypto_id: id,
+          },
+        });
+        createEntries.push(entries);
+      } catch (error) {
+        console.error(`Error fetching data for ${coin}:`, error.stack); // should use logger instead of console
+      }
+    });
+
+    await Promise.all(promises);
+    return createEntries;
+  }
 }
