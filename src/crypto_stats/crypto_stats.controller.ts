@@ -1,14 +1,14 @@
 import { Controller, Get, Query, ParseEnumPipe } from '@nestjs/common';
 import { CryptoStatsService } from './crypto_stats.service';
-import { ApiOperation, ApiTags, ApiQuery } from '@nestjs/swagger';
-import { CryptoCurrency, GetCryptoDto } from './dto/get_crypto.dto';
+import { ApiOperation, ApiTags, ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { CryptoCurrency } from './dto/get_crypto.dto';
 
 @ApiTags('Crypto Statistics')
-@Controller('stats')
+@Controller()
 export class CryptoStatsController {
   constructor(private readonly cryptoStatsService: CryptoStatsService) {}
 
-  @Get()
+  @Get('stats')
   @ApiOperation({
     summary: 'Get latest cryptocurrency data',
     description: 'Returns the latest data about the requested cryptocurrency.',
@@ -18,6 +18,7 @@ export class CryptoStatsController {
     enum: CryptoCurrency,
     description: 'The cryptocurrency to fetch data for',
   })
+  @ApiResponse({ status: 200, description: 'Latest cryptocurrency data' })
   async getCurrentStats(
     @Query('coin', new ParseEnumPipe(CryptoCurrency)) coin: CryptoCurrency,
   ) {
@@ -25,6 +26,31 @@ export class CryptoStatsController {
     return {
       success: true,
       data: result,
+    };
+  }
+
+  @Get('deviation')
+  @ApiOperation({
+    summary: 'Get price standard deviation',
+    description:
+      'Returns the standard deviation of the price for the last 100 records of the requested cryptocurrency.',
+  })
+  @ApiQuery({
+    name: 'coin',
+    enum: CryptoCurrency,
+    description: 'The cryptocurrency to calculate standard deviation for',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Standard deviation of cryptocurrency price',
+  })
+  async getStandardDeviation(
+    @Query('coin', new ParseEnumPipe(CryptoCurrency)) coin: CryptoCurrency,
+  ) {
+    const result = await this.cryptoStatsService.getStandardDeviationById(coin);
+    return {
+      success: true,
+      data: { deviation: result },
     };
   }
 }
